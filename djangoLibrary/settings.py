@@ -32,6 +32,10 @@ ALLOWED_HOSTS = []
 
 INSTALLED_APPS = [
     #my app
+<<<<<<< HEAD
+=======
+
+>>>>>>> 07c90adfdf5ae78654ff388219db0f81b4db2982
     
     #default app
     'django.contrib.admin',
