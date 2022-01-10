@@ -22,7 +22,7 @@ class Author(models.Model):
         """
         Строка представляющая модель объекта.
         """
-        return '%s, %s' % (self.last_name, self.first_name)
+        return '{0} ({1})'.format (self.last_name, self.first_name)
 
 class Genre(models.Model):
     """
