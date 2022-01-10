@@ -7,7 +7,7 @@ class Genre(models.Model):
     Модель представляющая жанр книги (e.g. Science Fiction, Non Fiction).
     """
     name = models.CharField(max_length=200, help_text="Введите жанр книги")
-
+    
     def __str__(self):
         """
         Строка для представления модели объекта (в Админ панеле etc.)
@@ -28,7 +28,7 @@ class Book(models.Model):
     genre = models.ManyToManyField(Genre, help_text="Выберите жанр для книги")
     # ManyToManyField используется потому что жанр может использоваться в многих книгах. Книги могут охватывать множество жанров.
     # Genre класс уже определен, поэтому мы можем указать объект выше.
-
+    
     def __str__(self):
         """
         Строка для представления модели объекта.
@@ -44,9 +44,9 @@ class Book(models.Model):
 
 class BookInstance(models.Model):
     """
-    Model representing a specific copy of a book (i.e. that can be borrowed from the library).
+    Модель представляющая специфическую копию книги (i.e. that can be borrowed from the library).
     """
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4, help_text="Unique ID for this particular book across whole library")
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, help_text="Уникальный ID для этой конкретной книги во всей библиотеке")
     book = models.ForeignKey('Book', on_delete=models.SET_NULL, null=True)
     imprint = models.CharField(max_length=200)
     due_back = models.DateField(null=True, blank=True)
@@ -66,6 +66,28 @@ class BookInstance(models.Model):
 
     def __str__(self):
         """
-        String for representing the Model object
+        Строка для представления объекта модели
         """
-        return '%s (%s)' % (self.id,self.book.title)
+        return '{0} ({1})'.format (self.id, self.book.title)  # '%s (%s)' % (self.id,self.book.title)
+
+class Author(models.Model):
+    """
+    Модель представляющая автора.
+    """
+    first_name = models.CharField(max_length=100)
+    last_name = models.CharField(max_length=100)
+    date_of_birth = models.DateField(null=True, blank=True)
+    date_of_death = models.DateField('Умер', null=True, blank=True)
+
+    def get_absolute_url(self):
+        """
+        Возвращает url для доступа к определенному экземпляру автора.
+        """
+        return reverse('author-detail', args=[str(self.id)])
+
+
+    def __str__(self):
+        """
+        Строка представляющая модель объекта.
+        """
+        return '%s, %s' % (self.last_name, self.first_name)
