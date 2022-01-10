@@ -91,4 +91,3 @@ class BookInstance(models.Model):
         Строка для представления объекта модели
         """
         return '{0} ({1})'.format (self.id, self.book.title)  # '%s (%s)' % (self.id,self.book.title)
-
