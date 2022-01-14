@@ -36,6 +36,11 @@ def index(request):
     # test
     num_books_word = Book.objects.filter(title='Хоббит, или Туда и обратно').count()
 
+    num_authors=Author.objects.count()  # The 'all()' is implied by default.
+    # Number of visits to this view, as counted in the session variable.
+    num_visits=request.session.get('num_visits', 0)
+    request.session['num_visits'] = num_visits+1
+
     # Отрисовка HTML-шаблона index.html с данными внутри
     # переменной контекста context  
     return render(
@@ -48,5 +53,7 @@ def index(request):
             'num_authors': num_authors,
             'num_genres': num_genres,
             'num_books_word': num_books_word,
-            'title': 'Главная страница'}
+            'title': 'Главная страница',
+            'num_visits': num_visits}
     )
+
