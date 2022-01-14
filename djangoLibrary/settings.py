@@ -57,7 +57,7 @@ ROOT_URLCONF = 'djangoLibrary.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR, 'templates'],
+        'DIRS': [BASE_DIR, 'templates'], # добавили возможность видеть шаблоны из корня проекта
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
