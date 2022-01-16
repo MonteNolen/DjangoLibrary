@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from .models import Book, Author, BookInstance, Genre
 from django.views import generic
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 class AuthorListView(generic.ListView):
     model = Author
@@ -22,7 +23,6 @@ class BookListView(generic.ListView):
         #return Book.objects.filter(title__icontains='Хоббит')[:5] # Получить 5 книг, содержащих 'war' в заголовке
     paginate_by = 2
 
-# Create your views here.
 def index(request):
     # Генерация "количеств" некоторых главных объектов
     num_books = Book.objects.all().count()
@@ -57,3 +57,14 @@ def index(request):
             'num_visits': num_visits}
     )
 
+class LoanedBooksByUserListView(LoginRequiredMixin,generic.ListView):
+    """
+    Generic class-based view listing books on loan to current user.
+    """
+    # Общее представление на основе классов, в котором перечислены книги, предоставленные текущему пользователю
+    model = BookInstance
+    template_name ='catalog/bookinstance_list_borrowed_user.html'
+    paginate_by = 10
+
+    def get_queryset(self):
+        return BookInstance.objects.filter(borrower=self.request.user).filter(status__exact='o').order_by('due_back')
