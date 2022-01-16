@@ -29,7 +29,7 @@ def index(request):
     num_instances = BookInstance.objects.all().count()
     # Доступные книги (статус = 'a')
     num_instances_available = BookInstance.objects.filter(status__exact='a').count()
-    num_authors = Author.objects.count()  # Метод 'all()' применён по умолчанию.
+    num_authors = Author.objects.count()  # М етод 'all()' применён по умолчанию.
     num_genres = Genre.objects.count()
 
     # Книги с названием Хоббит, или Туда и обратно
