@@ -57,7 +57,7 @@ class Note(models.Model):
     )
     
     status = models.CharField(max_length=10, choices=LOAN_STATUS, blank=True, default='Открыто', help_text='Статус задачи')
-    
+
     class Meta:
         verbose_name = 'Отчет'
         verbose_name_plural = 'Отчеты'
@@ -96,4 +96,4 @@ class NoteInstance(models.Model):
         """
         return '{0} ({1})'.format (self.id, self.note.title)  # '%s (%s)' % (self.id,self.book.title)
 
-
+#1121212
