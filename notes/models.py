@@ -4,6 +4,15 @@ from django.urls import reverse
 import uuid
 from datetime import date
 
+class UsersPro(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    
+    def __str__(self):
+        return self.user.get_full_name()
+    
+    class Meta:
+        verbose_name = 'Пользователь'
+        verbose_name_plural = 'Пользователи'
 """
 class User(models.Model):
     
@@ -44,11 +53,11 @@ class Note(models.Model):
     Модель для представления формы отчета
     """
     title = models.CharField("Заголовок", max_length=100)
-    user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
+    user = models.ForeignKey('UsersPro', on_delete=models.SET_NULL, null=True, verbose_name='Ответственный')
     date = models.DateField("Дата создания",null=True, blank=True)
     textarea = models.TextField("Поле для отчета", max_length=1000)
 
-    tags = models.ManyToManyField(Tags, help_text="Выберите вид задачи")
+    tags = models.ManyToManyField(Tags, help_text="Выберите вид задачи", blank=True, verbose_name='Теги')
 
     LOAN_STATUS = (
         ('В работе', 'В работе'),
@@ -57,7 +66,7 @@ class Note(models.Model):
         ('Открыто', 'Открыто'),
     )
     
-    status = models.CharField(max_length=10, choices=LOAN_STATUS, blank=True, default='Открыто', help_text='Статус задачи')
+    status = models.CharField(max_length=10, choices=LOAN_STATUS, blank=True, default='Открыто', help_text='Статус задачи', verbose_name='Статус')
 
     class Meta:
         verbose_name = 'Отчет'

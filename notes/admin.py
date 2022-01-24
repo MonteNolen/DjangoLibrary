@@ -1,18 +1,18 @@
 from django.contrib import admin
-from .models import Note, Tags, NoteInstance #, User
+from .models import Note, Tags, NoteInstance, UsersPro #, User
 
 admin.site.register(Tags)
 
 class Notes(admin.TabularInline):
     model = Note
     extra = 0
-"""
-class UserAdmin(admin.ModelAdmin):
-    list_display = ('last_name', 'first_name', 'post')    # декорация списка
-    fields = ['first_name', 'last_name', 'post']        # декорация списка
+
+class UsersProAdmin(admin.ModelAdmin):
+    #list_display = ('first_name', 'last_name')    # декорация списка
+    #fields = ['first_name', 'last_name']        # декорация списка
     inlines = [Notes]   # выводим отображение связанной модели
-"""
-#admin.site.register(User, UserAdmin)
+
+admin.site.register(UsersPro, UsersProAdmin)
 
 class NoteInstanceInline(admin.TabularInline):
     model = NoteInstance
