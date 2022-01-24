@@ -28,7 +28,7 @@ class Author(models.Model):
 
 class Genre(models.Model):
     """
-    Модель представляющая жанр книги (e.g. Science Fiction, Non Fiction).
+    Модель представляющая жанр книги.
     """
     name = models.CharField(max_length=200, help_text="Введите жанр книги")
     
@@ -97,7 +97,7 @@ class BookInstance(models.Model):
         ('a', 'Available'),
         ('r', 'Reserved'),
     )
-    
+
     status = models.CharField(max_length=1, choices=LOAN_STATUS, blank=True, default='m', help_text='Book availability')
 
     class Meta:
