@@ -4,10 +4,11 @@ from django.urls import reverse
 import uuid
 from datetime import date
 
+"""
 class User(models.Model):
-    """
-    Модель представляющая пользователя
-    """
+    
+    #Модель представляющая пользователя
+    
     first_name = models.CharField("Имя", max_length=100)
     last_name = models.CharField("Фамилия", max_length=100)
     
@@ -24,7 +25,7 @@ class User(models.Model):
 
     def __str__(self):
         return '{0} {1}'.format (self.first_name, self.last_name)
-
+"""
 class Tags(models.Model):
     """
     Модель представляющая вид задачи
@@ -43,7 +44,7 @@ class Note(models.Model):
     Модель для представления формы отчета
     """
     title = models.CharField("Заголовок", max_length=100)
-    user = models.ForeignKey('User', on_delete=models.SET_NULL, null=True)
+    user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
     date = models.DateField("Дата создания",null=True, blank=True)
     textarea = models.TextField("Поле для отчета", max_length=1000)
 
@@ -88,7 +89,6 @@ class NoteInstance(models.Model):
 
         verbose_name = 'Задача'
         verbose_name_plural = 'Задачи'
-
 
     def __str__(self):
         """
