@@ -105,7 +105,7 @@ class NoteInstance(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, help_text="Уникальный ID для этой задачи")
     note = models.ForeignKey('Note', on_delete=models.SET_NULL, null=True)
     must_do = models.DateField("Выполнить до", null=True, blank=True)
-    responsible = models.ForeignKey(Author, on_delete=models.SET_NULL, null=True, blank=True)
+    responsible = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
 
     LOAN_STATUS = (
         ('В работе', 'В работе'),

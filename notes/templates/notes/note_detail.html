@@ -10,9 +10,10 @@
     <h4>Кому передано</h4>
 
     {% for copy in note.noteinstance_set.all %}
+    <p>Выполняет: {{ copy.responsible }}</p>
     <hr>
-    <p class="{% if copy.status == 'a' %}text-success{% elif copy.status == 'd' %}text-danger{% else %}text-warning{% endif %}">{{ copy.get_status_display }}</p>
-    {% if copy.status != 'a' %}<p><strong>Статус заявки:</strong> {{copy.due_back}}</p>{% endif %}
+    <p class="{% if copy.status == 'В работе' %}text-success{% elif copy.status == 'Отложено' %}text-danger{% else %}text-warning{% endif %}">{{ copy.get_status_display }}</p>
+    {% if copy.status != 'Отложено' %}<p><strong>Сделать до:</strong> {{copy.must_do}}</p>{% endif %}
     <p class="text-muted"><strong>Id:</strong> {{copy.id}}</p>
     {% endfor %}
   </div>
