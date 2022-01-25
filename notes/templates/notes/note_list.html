@@ -1,0 +1,19 @@
+{% extends 'notes/layout.html' %}
+
+{% block content %}
+    <h1>Book List</h1>
+
+    {% if note_list %}
+    <ul>
+
+      {% for note in note_list %}
+      <li>
+        <a href="{{ note.get_absolute_url }}">{{ note.title }}</a> ({{note.user}})
+      </li>
+      {% endfor %}
+
+    </ul>
+    {% else %}
+      <p>There are no books in the library.</p>
+    {% endif %} 
+{% endblock %}
