@@ -11,6 +11,7 @@ class Author(models.Model):
     """
     Модель представляющая автора.
     """
+    user = models.OneToOneField(User, on_delete=models.CASCADE, null=True)
     first_name = models.CharField(max_length=100)
     last_name = models.CharField(max_length=100)
 
@@ -79,7 +80,7 @@ class Note(models.Model):
     date = models.DateField("Дата создания",null=True, blank=True)
     textarea = models.TextField("Поле для отчета", max_length=1000)
 
-    tags = models.ManyToManyField(Tags, help_text="Выберите вид задачи", blank=True, verbose_name='Теги')
+    tags = models.ManyToManyField(Tags, help_text="Выберите тэг", blank=True, verbose_name='Теги')
 
     class Meta:
         verbose_name = 'Отчет'
@@ -103,8 +104,8 @@ class NoteInstance(models.Model):
     """
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, help_text="Уникальный ID для этой задачи")
     note = models.ForeignKey('Note', on_delete=models.SET_NULL, null=True)
-    due_back = models.DateField("Выполнить до", null=True, blank=True)
-    responsible = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
+    must_do = models.DateField("Выполнить до", null=True, blank=True)
+    responsible = models.ForeignKey(Author, on_delete=models.SET_NULL, null=True, blank=True)
 
     LOAN_STATUS = (
         ('В работе', 'В работе'),
@@ -117,20 +118,17 @@ class NoteInstance(models.Model):
 
     @property
     def is_overdue(self):
-        if self.due_back and date.today() > self.due_back:
+        if self.must_do and date.today() > self.must_do:
             return True
         return False
 
     class Meta:
-        ordering = ["due_back"]
+        ordering = ["must_do"]
 
         verbose_name = 'Задача'
         verbose_name_plural = 'Задачи'
 
     def __str__(self):
-        """
-        Строка для представления объекта модели
-        """
-        return '{0} {1}'.format (self.id, self.note.title)  # '%s (%s)' % (self.id,self.book.title)
+        return '{0} {1}'.format (self.id, self.note.title)
 
 #1121212

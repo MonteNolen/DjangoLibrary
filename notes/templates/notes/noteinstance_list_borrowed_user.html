@@ -1,20 +1,20 @@
 {% extends 'notes/layout.html' %}
 
 {% block content %}
-    <h1>Borrowed books</h1>
+    <h1>Задачи в работе</h1>
 
     {% if noteinstance_list %}
     <ul>
 
       {% for noteinst in noteinstance_list %}
       <li class="{% if noteinst.is_overdue %}text-danger{% endif %}">
-        <a href="{% url 'note-detail' noteinst.note.pk %}">{{noteinst.note.title}}</a> ({{ noteinst.due_back }})
+        <a href="{% url 'note-detail' noteinst.note.pk %}">{{noteinst.note.title}}</a> ({{ noteinst.must_do }})
       </li>
       {% endfor %}
     </ul>
 
     {% else %}
-      <p>There are no books borrowed.</p>
+      <p>Нет задач</p>
     {% endif %}
     
 {% endblock %}

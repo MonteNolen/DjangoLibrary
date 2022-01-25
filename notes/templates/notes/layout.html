@@ -19,9 +19,10 @@
             <div class="col-sm-2">
             {% block sidebar %}
             <ul class="sidebar-nav">
-                <li><a href="{% url 'index' %}">Главная</a></li>
+                <li><a href="{% url 'index2' %}">Главная</a></li>
                 <li><a href="{% url 'notes' %}">Все отчеты</a></li>
                 <li><a href="{% url 'users' %}">Все юзеры</a></li>
+                <li><a href="{% url 'my-borrowed' %}">Задачи в работе</a></li>
             </ul>
             {% endblock %}
         </div>

@@ -25,12 +25,12 @@ class NoteAdmin(admin.ModelAdmin):
 
 @admin.register(NoteInstance)
 class NoteInstanceAdmin(admin.ModelAdmin):
-    list_display = ('note', id, 'due_back', 'status', 'responsible')
+    list_display = ('note', id, 'must_do', 'status', 'responsible')
     fieldsets = (
         (None, { 
             'fields': ('note', 'id')
         }),
         ('Availability', {
-            'fields': ('status', 'due_back', 'responsible')
+            'fields': ('status', 'must_do', 'responsible')
         }),
     )

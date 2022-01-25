@@ -25,16 +25,13 @@ class NoteListView(generic.ListView):
     paginate_by = 2
 
 class TransmittedNotesByUserListView(LoginRequiredMixin,generic.ListView):
-    """
-    Generic class-based view listing books on loan to current user.
-    """
     # Общее представление на основе классов, в котором перечислены книги, предоставленные текущему пользователю
     model = NoteInstance
     template_name ='notes/noteinstance_list_borrowed_user.html'
     paginate_by = 10
 
     def get_queryset(self):
-        return NoteInstance.objects.filter(borrower=self.request.user).filter(status__exact='В работе').order_by('due_back')
+        return NoteInstance.objects.filter(responsible=self.request.user).filter(status__exact='В работе').order_by('must_do')
 
 
 def index2(request):
