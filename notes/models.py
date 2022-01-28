@@ -7,57 +7,55 @@ from datetime import date
 #############################################################
     #Создание модели пользователя на основа встроенной модели
 #############################################################
+# class Author(models.Model):
+#     """
+#     Модель представляющая автора.
+#     """
+#     user = models.OneToOneField(User, on_delete=models.CASCADE, null=True)
+#     first_name = models.CharField(max_length=100)
+#     last_name = models.CharField(max_length=100)
+
+#     class Meta:
+#         verbose_name = 'Пользователь'
+#         verbose_name_plural = 'Пользователи'
+
+#     POSITION = [
+#         ("Operator", "Оператор"),
+#         ("Admin", "Администратор"),
+#         ("Engineer", "Ведущий инженер"),
+#     ]
+#     post = models.CharField("Должность", max_length=10, choices=POSITION, blank=True, default='Operator')
+
+#     def get_absolute_url(self):
+#         """
+#         Возвращает url для доступа к определенному экземпляру автора.
+#         """
+#         return reverse('user-detail', args=[str(self.id)])
+
+
+#     def __str__(self):
+#         """
+#         Строка представляющая модель объекта.
+#         """
+#         return '{0} {1}'.format (self.last_name, self.first_name)
+
 class Author(models.Model):
     """
     Модель представляющая автора.
     """
     user = models.OneToOneField(User, on_delete=models.CASCADE, null=True)
-    first_name = models.CharField(max_length=100)
-    last_name = models.CharField(max_length=100)
 
     class Meta:
         verbose_name = 'Пользователь'
         verbose_name_plural = 'Пользователи'
 
-    POSITION = [
-        ("Operator", "Оператор"),
-        ("Admin", "Администратор"),
-        ("Engineer", "Ведущий инженер"),
-    ]
-    post = models.CharField("Должность", max_length=10, choices=POSITION, blank=True, default='Operator')
-
     def get_absolute_url(self):
-        """
-        Возвращает url для доступа к определенному экземпляру автора.
-        """
         return reverse('user-detail', args=[str(self.id)])
 
 
     def __str__(self):
-        """
-        Строка представляющая модель объекта.
-        """
-        return '{0} {1}'.format (self.last_name, self.first_name)
-"""
-class CustomUser(models.Model):
-    
-    #Модель представляющая пользователя
-    user = models.OneToOneField(User, on_delete = models.CASCADE, primary_key = True)
-    
-    POSITION = [
-        ("Operator", "Оператор"),
-        ("Admin", "Администратор"),
-        ("Engineer", "Ведущий инженер"),
-    ]
-    post = models.CharField("Должность", max_length=10, choices=POSITION, blank=True, default='Operator')
+        return self.user.get_full_name()
 
-    class Meta:
-        verbose_name = 'Пользователь'
-        verbose_name_plural = 'Пользователи'
-
-    def __str__(self):
-        return '{0} {1}'.format (self.user.first_name, self.user.last_name)
-"""
 class Tags(models.Model):
     """
     Модель представляющая вид задачи
@@ -76,7 +74,7 @@ class Note(models.Model):
     Модель для представления формы отчета
     """
     title = models.CharField("Заголовок", max_length=100)
-    user = models.ForeignKey('Author', on_delete=models.SET_NULL, null=True, verbose_name='Ответственный')
+    user = models.ForeignKey('Author', on_delete=models.SET_NULL, blank=True, null=True, verbose_name='Ответственный')
     date = models.DateField("Дата создания",null=True, blank=True)
     textarea = models.TextField("Поле для отчета", max_length=1000)
 
@@ -85,7 +83,7 @@ class Note(models.Model):
     class Meta:
         verbose_name = 'Отчет'
         verbose_name_plural = 'Отчеты'
-
+    
     def __str__(self):
         return self.title
 
@@ -127,8 +125,8 @@ class NoteInstance(models.Model):
 
         verbose_name = 'Задача'
         verbose_name_plural = 'Задачи'
+        permissions = (("can_mark_returned", "Что-то должно тут быть"),)
 
     def __str__(self):
         return '{0} {1}'.format (self.id, self.note.title)
 
-#1121212

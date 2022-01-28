@@ -1,0 +1,19 @@
+{% extends 'notes/layout.html' %}
+
+{% block content %}
+    <h1>Все задачи</h1>
+  
+    {% if noteinstance_list %}
+    <ul>
+      {% for noteinst in noteinstance_list %}
+      <li class="{% if noteinst.is_overdue %}text-danger{% endif %}">
+        <a href="{% url 'note-detail' noteinst.note.pk %}">{{noteinst.note.title}}</a> ({{ noteinst.must_do }}) <p>({{ noteinst.responsible }})</p>
+      </li>
+      {% endfor %}
+    </ul>
+
+    {% else %}
+      <p>Нет задач</p>
+    {% endif %}
+ 
+{% endblock %}

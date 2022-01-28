@@ -1,12 +1,13 @@
 {% extends 'notes/layout.html' %}
 
 {% block content %}
-    {% if author_list %}
+    
+    {% if users_list %}
     <ul>
 
-    {% for user in author_list %}
+    {% for user in users_list %}
     <li>
-        <a href="{{ user.get_absolute_url }}">{{ user.first_name }} {{user.last_name}}</a> 
+        <a href="{{ user.get_absolute_url }}">{{ user }}</a> 
     </li>
     {% endfor %}
 

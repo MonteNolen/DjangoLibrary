@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Note, Tags, NoteInstance, Author #, User
+from .models import Note, Tags, NoteInstance, Author
 
 admin.site.register(Tags)
 
@@ -8,7 +8,7 @@ class Notes(admin.TabularInline):
     extra = 0
 
 class AuthorAdmin(admin.ModelAdmin):
-    list_display = ('last_name', 'first_name', 'post')    # декорация списка
+    #list_display = ('user', 'post')    # декорация списка
     inlines = [Notes]   # выводим отображение связанной модели
 
 admin.site.register(Author, AuthorAdmin)

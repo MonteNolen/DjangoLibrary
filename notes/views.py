@@ -1,15 +1,27 @@
 from django.shortcuts import render
 from .models import Note, Tags, NoteInstance, Author
 from django.views import generic
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
+from django.contrib.auth.decorators import permission_required
+#from django.contrib.admin.views.decorators import staff_member_required
+from django.contrib.auth.models import User
 
-class UserListView(generic.ListView):
-    model = Author
-    template_name = 'notes/users.html'
-    ##context_object_name = 'authors_list'
+# class UserListView(generic.ListView):
+#     model = Author
+#     template_name = 'notes/users.html'
+#     #context_object_name = 'authors_list'
+
+def UserList(request):
+    users_list = Author.objects.all()
+
+    context = {
+            "title": "Список пользователей",
+            "users_list": users_list,
+        }
+    return render(request, 'notes/users.html', context)
 
 class UserDetailView(generic.DetailView):
-    model = Author
+    model = User
     template_name = 'notes/user_detail.html'
 
 class NoteDetailView(generic.DetailView):
@@ -22,7 +34,8 @@ class NoteListView(generic.ListView):
     template_name = 'notes/note_list.html'  # Определение имени вашего шаблона и его расположения
     #def get_queryset(self):
         #return Book.objects.filter(title__icontains='Хоббит')[:5] # Получить 5 книг, содержащих 'war' в заголовке
-    paginate_by = 2
+    paginate_by = 10
+
 
 class TransmittedNotesByUserListView(LoginRequiredMixin,generic.ListView):
     # Общее представление на основе классов, в котором перечислены книги, предоставленные текущему пользователю
@@ -51,3 +64,12 @@ def index2(request):
             'title': 'Главная страница',
             }
     )
+
+
+class NoteListViewEditor(PermissionRequiredMixin, generic.ListView):
+    model = NoteInstance
+    permission_required = 'notes.can_mark_returned'
+    template_name = 'notes/note_editor.html'
+    paginate_by = 10
+    def get_queryset(self):
+        return NoteInstance.objects.all()
