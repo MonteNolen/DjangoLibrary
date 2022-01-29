@@ -34,14 +34,14 @@ class NoteListView(generic.ListView):
     template_name = 'notes/note_list.html'  # Определение имени вашего шаблона и его расположения
     #def get_queryset(self):
         #return Book.objects.filter(title__icontains='Хоббит')[:5] # Получить 5 книг, содержащих 'war' в заголовке
-    paginate_by = 10
+    paginate_by = 2
 
 
 class TransmittedNotesByUserListView(LoginRequiredMixin,generic.ListView):
     # Общее представление на основе классов, в котором перечислены книги, предоставленные текущему пользователю
     model = NoteInstance
     template_name ='notes/noteinstance_list_borrowed_user.html'
-    paginate_by = 10
+    paginate_by = 2
 
     def get_queryset(self):
         return NoteInstance.objects.filter(responsible=self.request.user).filter(status__exact='В работе').order_by('must_do')
