@@ -78,7 +78,7 @@ class Note(models.Model):
     date = models.DateField("Дата создания",null=True, blank=True)
     textarea = models.TextField("Поле для отчета", max_length=1000)
 
-    tags = models.ManyToManyField(Tags, help_text="Выберите тэг", blank=True, verbose_name='Теги')
+    tags = models.ManyToManyField(Tags, help_text="Выберите тег", blank=True, verbose_name='Теги')
 
     class Meta:
         verbose_name = 'Отчет'

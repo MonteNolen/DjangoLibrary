@@ -120,14 +120,27 @@ def RenewNoteStuff(request, pk):
     Работа с формами
     """
 
-class NoteCreate(CreateView):
+class NoteCreate(LoginRequiredMixin, CreateView):
     model = Note
-    fields = '__all__'
+    #fields = '__all__'
+    fields = ['title', 'date', 'textarea', 'tags']
     success_url = reverse_lazy('notes')
-    
+    raise_exception = True
+    # def form_valid(self, form):
+    #     form.instance.user = self.request.user
+    #     return super(NoteCreate, self).form_valid(form)
+    def form_valid(self, form):
+        # создаем форму, но не отправляем его в БД, пока просто держим в памяти
+        fields = form.save(commit=False)
+        # Через реквест передаем недостающую форму, которая обязательна
+        fields.user = Author.objects.get(user=self.request.user)
+        # Наконец сохраняем в БД
+        fields.save()
+        return super().form_valid(form)
+
 class NoteUpdate(UpdateView):
     model = Note
-    fields = '__all__'
+    fields = ['title', 'date', 'textarea', 'tags']
     success_url = reverse_lazy('notes')
 
 class NoteDelete(PermissionRequiredMixin, DeleteView):
