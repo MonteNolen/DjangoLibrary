@@ -6,6 +6,13 @@ from django.contrib.auth.decorators import permission_required
 #from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth.models import User
 
+from django.shortcuts import get_object_or_404
+from django.http import HttpResponseRedirect
+from django.urls import reverse
+import datetime
+from .forms import RenewNoteForm
+
+
 # class UserListView(generic.ListView):
 #     model = Author
 #     template_name = 'notes/users.html'
@@ -73,3 +80,36 @@ class NoteListViewEditor(PermissionRequiredMixin, generic.ListView):
     paginate_by = 10
     def get_queryset(self):
         return NoteInstance.objects.all()
+
+@permission_required('notes.can_mark_returned')
+def RenewNoteStuff(request, pk):
+    note_inst = get_object_or_404(NoteInstance, pk=pk)
+
+    # Если данный запрос типа POST, тогда
+    if request.method == 'POST':
+
+        # Создаём экземпляр формы и заполняем данными из запроса (связывание, binding):
+        form = RenewNoteForm(request.POST)
+
+        # Проверка валидности данных формы:
+        if form.is_valid():
+            # Обработка данных из form.cleaned_data
+            #(здесь мы просто присваиваем их полю due_back)
+            note_inst.must_do = form.cleaned_data['renewal_date']
+            note_inst.save()
+
+            return HttpResponseRedirect(reverse('note-editor') )
+
+    # Если это GET (или какой-либо ещё), создать форму по умолчанию.
+    else:
+        proposed_renewal_date = datetime.date.today() + datetime.timedelta(weeks=3)
+        form = RenewNoteForm(initial={'renewal_date': proposed_renewal_date,})
+
+    return render(
+        request, 
+        'notes/renew_note_stuff.html', 
+        context = {
+            'form': form,
+            'noteinst':note_inst
+            }
+        )

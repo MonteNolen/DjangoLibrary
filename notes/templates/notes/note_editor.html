@@ -7,7 +7,11 @@
     <ul>
       {% for noteinst in noteinstance_list %}
       <li class="{% if noteinst.is_overdue %}text-danger{% endif %}">
-        <a href="{% url 'note-detail' noteinst.note.pk %}">{{noteinst.note.title}}</a> ({{ noteinst.must_do }}) <p>({{ noteinst.responsible }})</p>
+        <a href="{% url 'note-detail' noteinst.note.pk %}">{{noteinst.note.title}}</a> ({{ noteinst.must_do }}) {{ noteinst.responsible }} 
+        {% if perms.notes.can_mark_returned %}
+        <a href="{% url 'renew-note-stuff' noteinst.id %}">Обновление</a>
+        {% endif %}
+        
       </li>
       {% endfor %}
     </ul>

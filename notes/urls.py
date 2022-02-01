@@ -1,4 +1,4 @@
-from django.urls import path
+from django.urls import path, re_path
 from . import views
 
 urlpatterns = [
@@ -9,4 +9,6 @@ urlpatterns = [
     path('user/<int:pk>', views.UserDetailView.as_view(), name='user-detail'),
     path('note/<int:pk>', views.NoteDetailView.as_view(), name='note-detail'),
     path('mynotes', views.TransmittedNotesByUserListView.as_view(), name='my-borrowed'),
+    path('note/<uuid:pk>/renew/', views.RenewNoteStuff, name='renew-note-stuff'),
+    # re_path(r'^note/(?P<pk>[-\w]+)/renew/$', views.RenewNoteStuff, name='renew-note-stuff'),
 ]
