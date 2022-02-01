@@ -15,7 +15,4 @@
       {% else %}
       <p>Нет задач</p>
       {% endif %}
-      {% if perms.notes.can_mark_returned %}
-      <li><a href="{% url 'note-create' %}">Создать задачу</a></li>
-      {% endif %}
 {% endblock %}
