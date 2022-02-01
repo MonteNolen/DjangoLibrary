@@ -1,0 +1,13 @@
+{% extends "notes/layout.html" %}
+{% block content %}
+
+<h1>Удалить запись</h1>
+
+<p>Ты уверене, что хочешь удалить эту запись? {{ note }}?</p>
+
+<form action="" method="POST">
+  {% csrf_token %}
+  <input type="submit" value="Да, удалить." />
+</form>
+
+{% endblock %}

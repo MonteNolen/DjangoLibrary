@@ -5,7 +5,10 @@
 <p><strong>Пользователь:</strong> <a href="">{{ note.user }}</a></p> <!-- author detail link not yet defined -->
   <p><strong>Текст:</strong> {{ note.textarea }}</p>
   <p><strong>Тэг:</strong> {% for tags in note.tags.all %} {{ tags }}{% if not forloop.last %}, {% endif %}{% endfor %}</p>
-
+  {% if perms.notes.can_mark_returned %}
+    <li><a href="{% url 'note-update' note.id %}">Редактировать</a></li>
+    <li><a href="{% url 'note-delete' note.id %}">Удалить</a></li>
+  {% endif %}
   <div style="margin-left:20px;margin-top:20px">
     <h4>Кому передано</h4>
 

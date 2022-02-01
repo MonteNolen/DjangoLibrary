@@ -1,14 +1,14 @@
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from .models import Note, Tags, NoteInstance, Author
 from django.views import generic
+from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.contrib.auth.decorators import permission_required
 #from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth.models import User
 
-from django.shortcuts import get_object_or_404
 from django.http import HttpResponseRedirect
-from django.urls import reverse
+from django.urls import reverse, reverse_lazy
 import datetime
 from .forms import RenewNoteForm
 
@@ -41,7 +41,7 @@ class NoteListView(generic.ListView):
     template_name = 'notes/note_list.html'  # Определение имени вашего шаблона и его расположения
     #def get_queryset(self):
         #return Book.objects.filter(title__icontains='Хоббит')[:5] # Получить 5 книг, содержащих 'war' в заголовке
-    paginate_by = 2
+    paginate_by = 10
 
 
 class TransmittedNotesByUserListView(LoginRequiredMixin,generic.ListView):
@@ -94,16 +94,16 @@ def RenewNoteStuff(request, pk):
         # Проверка валидности данных формы:
         if form.is_valid():
             # Обработка данных из form.cleaned_data
-            #(здесь мы просто присваиваем их полю due_back)
-            note_inst.must_do = form.cleaned_data['renewal_date']
+            #(здесь мы просто присваиваем их полю must_do)
+            note_inst.must_do = form.cleaned_data['must_do']
             note_inst.save()
 
             return HttpResponseRedirect(reverse('note-editor') )
 
     # Если это GET (или какой-либо ещё), создать форму по умолчанию.
     else:
-        proposed_renewal_date = datetime.date.today() + datetime.timedelta(weeks=3)
-        form = RenewNoteForm(initial={'renewal_date': proposed_renewal_date,})
+        proposed_must_do = datetime.date.today() + datetime.timedelta(weeks=3)
+        form = RenewNoteForm(initial={'must_do': proposed_must_do,})
 
     return render(
         request, 
@@ -113,3 +113,24 @@ def RenewNoteStuff(request, pk):
             'noteinst':note_inst
             }
         )
+
+
+
+    """
+    Работа с формами
+    """
+
+class NoteCreate(CreateView):
+    model = Note
+    fields = '__all__'
+    success_url = reverse_lazy('notes')
+    
+class NoteUpdate(UpdateView):
+    model = Note
+    fields = '__all__'
+    success_url = reverse_lazy('notes')
+
+class NoteDelete(PermissionRequiredMixin, DeleteView):
+    model = Note
+    permission_required = 'notes.can_mark_returned'
+    success_url = reverse_lazy('notes')

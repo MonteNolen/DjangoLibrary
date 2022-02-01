@@ -11,4 +11,7 @@ urlpatterns = [
     path('mynotes', views.TransmittedNotesByUserListView.as_view(), name='my-borrowed'),
     path('note/<uuid:pk>/renew/', views.RenewNoteStuff, name='renew-note-stuff'),
     # re_path(r'^note/(?P<pk>[-\w]+)/renew/$', views.RenewNoteStuff, name='renew-note-stuff'),
+    path('note/create/', views.NoteCreate.as_view(), name='note-create'),
+    path('<int:pk>/update/', views.NoteUpdate.as_view(), name='note-update'),
+    path('note/<int:pk>/delete/', views.NoteDelete.as_view(), name='note-delete'),
 ]

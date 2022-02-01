@@ -1,7 +1,7 @@
 {% extends 'notes/layout.html' %}
 
 {% block content %}
-    <h1>Book List</h1>
+    <h1>Список задач</h1>
       {% if note_list %}
       <ul>
 
@@ -13,7 +13,9 @@
 
       </ul>
       {% else %}
-      <p>There are no books in the library.</p>
+      <p>Нет задач</p>
       {% endif %}
-    
+      {% if perms.notes.can_mark_returned %}
+      <li><a href="{% url 'note-create' %}">Создать задачу</a></li>
+      {% endif %}
 {% endblock %}

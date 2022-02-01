@@ -24,12 +24,13 @@
                     <li><a href="{% url 'users' %}">Все юзеры</a></li>
                     {% if user.is_authenticated %}
                     <li>User: {{ user.get_username }}</li>
+                    <li><a href="{% url 'note-create' %}">Создать отчет</a></li>
                     <li><a href="{% url 'my-borrowed' %}">Задачи в работе</a></li>
                     <li><a href="{% url 'logout'%}?next={{request.path}}">Logout</a></li>
                     {% else %}
                     <li><a href="{% url 'login'%}?next={{request.path}}">Login</a></li>
                     {% endif %}
-                    {% if user.is_staff %}
+                    {% if perms.notes.can_mark_returned %}
                     <li><a href="{% url 'note-editor' %}">Все задачи в работе</a></li>
                     {% endif %}
                 </ul>
