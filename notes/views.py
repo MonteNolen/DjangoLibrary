@@ -138,7 +138,7 @@ class NoteCreate(LoginRequiredMixin, CreateView):
         fields.save()
         return super().form_valid(form)
 
-class NoteUpdate(UpdateView):
+class NoteUpdate(LoginRequiredMixin, UpdateView):
     model = Note
     fields = ['title', 'date', 'textarea', 'tags']
     success_url = reverse_lazy('notes')
