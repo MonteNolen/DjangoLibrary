@@ -130,7 +130,7 @@ class NoteCreate(LoginRequiredMixin, CreateView):
     #     form.instance.user = self.request.user
     #     return super(NoteCreate, self).form_valid(form)
     def form_valid(self, form):
-        # создаем форму, но не отправляем его в БД, пока просто держим в памяти
+        # создаем форму, но не отправляем ее в БД, пока просто держим в памяти
         fields = form.save(commit=False)
         # Через реквест передаем недостающую форму, которая обязательна
         fields.user = Author.objects.get(user=self.request.user)
