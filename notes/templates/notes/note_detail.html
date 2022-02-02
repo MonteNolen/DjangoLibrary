@@ -2,9 +2,8 @@
 
 {% block content %}
 <h1>Title: {{ note.title }}</h1>
-<p><strong>Пользователь:</strong> <a href="">{{ note.user }}</a></p> <!-- author detail link not yet defined -->
-  <p><strong>Текст:</strong> {{ note.textarea }}</p>
-  <p><strong>Тэг:</strong> {% for tags in note.tags.all %} {{ tags }}{% if not forloop.last %}, {% endif %}{% endfor %}</p>
+<p><strong>Создал: </strong> <a href="">{{ note.user }}</a></p> <!-- author detail link not yet defined -->
+  <p><strong>Текст: </strong> {{ note.textarea }}</p>
   {% if perms.notes.can_mark_returned %}
     <li><a href="{% url 'note-update' note.id %}">Редактировать</a></li>
     <li><a href="{% url 'note-delete' note.id %}">Удалить</a></li>
@@ -12,12 +11,13 @@
   <div style="margin-left:20px;margin-top:20px">
     <h4>Кому передано</h4>
 
-    {% for copy in note.noteinstance_set.all %}
-    <p>Выполняет: {{ copy.responsible }}</p>
+    {% for n in note.noteinstance_set.all %}
+    <p>Выполняет: {{ n.responsible }}</p>
     <hr>
-    <p class="{% if copy.status == 'В работе' %}text-success{% elif copy.status == 'Отложено' %}text-danger{% else %}text-warning{% endif %}">{{ copy.get_status_display }}</p>
-    {% if copy.status != 'Отложено' %}<p><strong>Сделать до:</strong> {{copy.must_do}}</p>{% endif %}
-    <p class="text-muted"><strong>Id:</strong> {{copy.id}}</p>
+    <p><strong>Статус: </strong> {% for n in note.noteinstance_set.all %} {{ n }}{% if not forloop.last %}, {% endif %}{% endfor %}</p>
+    <p class="{% if n.status == 'В работе' %}text-success{% elif n.status == 'Отложено' %}text-danger{% else %}text-warning{% endif %}">{{ n.get_status_display }}</p>
+    {% if copy.status != 'Отложено' %}<p><strong>Сделать до:</strong> {{n.must_do}}</p>{% endif %}
+    <p class="text-muted"><strong>Id:</strong> {{n.id}}</p>
     {% endfor %}
   </div>
 {% endblock content %}

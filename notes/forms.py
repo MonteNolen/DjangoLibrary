@@ -26,3 +26,4 @@ class RenewNoteForm(ModelForm):
         fields = ['must_do',]
         labels = { 'must_do': _('Renewal date'), }
         help_texts = { 'must_do': _('Укажите дату от сейчас и до 4 недель вперед.'), }
+

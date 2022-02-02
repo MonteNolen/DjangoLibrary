@@ -1,7 +1,7 @@
 from django.contrib import admin
-from .models import Note, Tags, NoteInstance, Author
+from .models import Note, NoteInstance, Author
 
-admin.site.register(Tags)
+# admin.site.register(Tags)
 
 class Notes(admin.TabularInline):
     model = Note
@@ -20,7 +20,7 @@ class NoteInstanceInline(admin.TabularInline):
 @admin.register(Note)
 class NoteAdmin(admin.ModelAdmin):
     #list_filter = ('status', 'tags')
-    list_display = ('title', 'display_tags', 'user') #'user',
+    list_display = ('title', 'user') #'user',
     inlines = [NoteInstanceInline]
 
 @admin.register(NoteInstance)

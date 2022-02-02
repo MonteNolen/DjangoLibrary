@@ -32,7 +32,6 @@ ALLOWED_HOSTS = []
 
 INSTALLED_APPS = [
     #my app
-    'catalog',
     'notes',
     #default app
     'django.contrib.admin',
@@ -123,7 +122,7 @@ USE_TZ = True
 STATIC_URL = 'static/'
 
 STATICFILES_DIRS = [
-    BASE_DIR / "catalog/static",
+    BASE_DIR / "notes/static",
     #'/var/www/static/',
 ]
 

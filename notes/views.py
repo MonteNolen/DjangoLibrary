@@ -1,5 +1,5 @@
 from django.shortcuts import render, get_object_or_404
-from .models import Note, Tags, NoteInstance, Author
+from .models import Note, NoteInstance, Author
 from django.views import generic
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
@@ -54,7 +54,7 @@ class TransmittedNotesByUserListView(LoginRequiredMixin,generic.ListView):
         return NoteInstance.objects.filter(responsible=self.request.user).filter(status__exact='В работе').order_by('must_do')
 
 
-def index2(request):
+def index(request):
     num_notes = Note.objects.all().count()
     num_instances = NoteInstance.objects.all().count()
     # Заявки со статусом "Открыто"
@@ -123,7 +123,7 @@ def RenewNoteStuff(request, pk):
 class NoteCreate(LoginRequiredMixin, CreateView):
     model = Note
     #fields = '__all__'
-    fields = ['title', 'date', 'textarea', 'tags']
+    fields = ['title', 'date', 'textarea']
     success_url = reverse_lazy('notes')
     raise_exception = True
     # def form_valid(self, form):
@@ -140,7 +140,7 @@ class NoteCreate(LoginRequiredMixin, CreateView):
 
 class NoteUpdate(LoginRequiredMixin, UpdateView):
     model = Note
-    fields = ['title', 'date', 'textarea', 'tags']
+    fields = ['title', 'date', 'textarea']
     success_url = reverse_lazy('notes')
 
 class NoteDelete(PermissionRequiredMixin, DeleteView):

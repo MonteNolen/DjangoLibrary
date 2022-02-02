@@ -56,18 +56,18 @@ class Author(models.Model):
     def __str__(self):
         return self.user.get_full_name()
 
-class Tags(models.Model):
-    """
-    Модель представляющая вид задачи
-    """
-    name = models.CharField("Тег", max_length=200, help_text="Введите название задачи")
+# class Tags(models.Model):
+#     """
+#     Модель представляющая вид задачи
+#     """
+#     name = models.CharField("Тег", max_length=200, help_text="Введите название задачи")
 
-    class Meta:
-        verbose_name = 'Тег'
-        verbose_name_plural = 'Теги'
+#     class Meta:
+#         verbose_name = 'Тег'
+#         verbose_name_plural = 'Теги'
 
-    def __str__(self):
-        return self.name
+#     def __str__(self):
+#         return self.name
 
 class Note(models.Model):
     """
@@ -75,10 +75,10 @@ class Note(models.Model):
     """
     title = models.CharField("Заголовок", max_length=100)
     user = models.ForeignKey('Author', on_delete=models.SET_NULL, blank=True, null=True, verbose_name='Ответственный')
-    date = models.DateField("Дата создания",null=True, blank=True)
+    date = models.DateField("Выполнить до",null=True, blank=True)
     textarea = models.TextField("Поле для отчета", max_length=1000)
 
-    tags = models.ManyToManyField(Tags, help_text="Выберите тег", blank=True, verbose_name='Теги')
+    #tags = models.ManyToManyField(Tags, help_text="Выберите тег", blank=True, verbose_name='Статус')
 
     class Meta:
         verbose_name = 'Отчет'
@@ -90,10 +90,10 @@ class Note(models.Model):
     def get_absolute_url(self):
         return reverse('note-detail', args=[str(self.id)])
 
-    def display_tags(self):
-        return ', '.join([ tags.name for tags in self.tags.all() ]) #all()[:3] для вывода определнного кол-ва ])
+    # def display_tags(self):
+    #     return ', '.join([ tags.name for tags in self.tags.all() ]) #all()[:3] для вывода определнного кол-ва ])
         
-    display_tags.short_description = 'Теги'
+    #display_tags.short_description = 'Статус'
 
     
 class NoteInstance(models.Model):
@@ -105,14 +105,14 @@ class NoteInstance(models.Model):
     must_do = models.DateField("Выполнить до", null=True, blank=True)
     responsible = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
 
-    LOAN_STATUS = (
+    STATUS_CHOICES =(
         ('В работе', 'В работе'),
         ('Выполнил', 'Выполнил'),
         ('Отложено', 'Отложено'),
         ('Открыто', 'Открыто'),
-    )
+)
     
-    status = models.CharField(max_length=10, choices=LOAN_STATUS, blank=True, default='Открыто', help_text='Статус задачи', verbose_name='Статус')
+    status = models.CharField(max_length=10, choices=STATUS_CHOICES, blank=True, default='Открыто', help_text='Статус задачи', verbose_name='Статус')
 
     @property
     def is_overdue(self):
