@@ -32,6 +32,7 @@ class NoteAdmin(admin.ModelAdmin):
 class TaskAdmin(admin.ModelAdmin):
     list_filter= ('status', 'responsible')
     list_display = ('user', 'title', 'must_do', 'status', 'responsible')
+    search_fields = ['title', 'textarea']
     fieldsets = (
         # (None, { 
         #     'fields': ('note', 'id')
