@@ -1,0 +1,19 @@
+{% extends 'notes/layout.html' %}
+
+{% block content %}
+    <h1>Задачи в работе</h1>
+
+    {% if task_list %}
+    <ul>
+      {% for t in task_list %}
+      <li class="{% if t.is_overdue %}text-danger{% endif %}">
+        <a href="{{ t.get_absolute_url }}">{{ t.title }}</a> ({{ t.must_do }})
+      </li>
+      {% endfor %}
+    </ul>
+
+    {% else %}
+      <p>Нет задач</p>
+    {% endif %}
+    
+{% endblock %}

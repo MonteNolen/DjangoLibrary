@@ -1,12 +1,12 @@
 from django.forms import ModelForm
-from .models import NoteInstance
+from .models import Task
 
 from django.core.exceptions import ValidationError
 from django.utils.translation import gettext_lazy as _
-import datetime #for checking renewal date range.
+import datetime
 
 
-class RenewNoteForm(ModelForm): 
+class RenewTaskForm(ModelForm): 
     def clean_must_do(self):
         data = self.cleaned_data['must_do']
 
@@ -22,8 +22,7 @@ class RenewNoteForm(ModelForm):
         return data
 
     class Meta:
-        model = NoteInstance
+        model = Task
         fields = ['must_do',]
         labels = { 'must_do': _('Renewal date'), }
         help_texts = { 'must_do': _('Укажите дату от сейчас и до 4 недель вперед.'), }
-

@@ -1,14 +1,14 @@
 {% extends 'notes/layout.html' %}
 
 {% block content %}
-<h1>Title: {{ note.title }}</h1>
-<p><strong>Создал: </strong> <a href="">{{ note.user }}</a></p> <!-- author detail link not yet defined -->
-<p><strong>Дата: </strong> {{ note.date }}</p>
-<p><strong>Текст: </strong> {{ note.textarea }}</p>
-  {% if perms.notes.can_mark_returned %}
-    <li><a href="{% url 'note-update' note.id %}">Редактировать</a></li>
-    <li><a href="{% url 'note-delete' note.id %}">Удалить</a></li>
-  {% endif %}
+<h1>Title: {{ task.title }}</h1>
+<p><strong>Создал: </strong> <a href="">{{ task.user }}</a></p> <!-- author detail link not yet defined -->
+<p><strong>Дата: </strong> {{ task.date }}</p>
+<p><strong>Текст: </strong> {{ task.textarea }}</p>
+  {% comment %} {% if perms.notes.can_mark_returned %}
+    <li><a href="{% url 'note-update' task.id %}">Редактировать</a></li>
+    <li><a href="{% url 'note-delete' task.id %}">Удалить</a></li>
+  {% endif %} {% endcomment %}
   {% comment %} <div style="margin-left:20px;margin-top:20px">
     <h4>Кому передано</h4>
 

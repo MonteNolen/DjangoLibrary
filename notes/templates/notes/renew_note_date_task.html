@@ -1,0 +1,16 @@
+{% extends "notes/layout.html" %}
+{% block content %}
+
+    <h1>Обновление: {{ notetask.note.title }}</h1>
+    <p>Передано на: {{ notetask.responsible }}</p>
+    <p{% if noteinst.is_must_do %} class="text-danger" {% endif %}>Должно быть сделано до: {{notetask.must_do}}</p>
+
+    <form action="" method="post">
+        {% csrf_token %}
+        <table>
+        {{ form }}
+        </table>
+        <input type="submit" value="Submit" />
+    </form>
+
+{% endblock %}

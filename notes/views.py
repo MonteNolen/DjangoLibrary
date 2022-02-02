@@ -1,16 +1,15 @@
 from django.shortcuts import render, get_object_or_404
-from .models import Note, NoteInstance, Author
 from django.views import generic
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.contrib.auth.decorators import permission_required
-#from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth.models import User
-
 from django.http import HttpResponseRedirect
 from django.urls import reverse, reverse_lazy
 import datetime
-from .forms import RenewNoteForm
+
+from .forms import RenewTaskForm
+from .models import Note, Task, Author
 
 
 # class UserListView(generic.ListView):
@@ -34,6 +33,9 @@ class UserDetailView(generic.DetailView):
 class NoteDetailView(generic.DetailView):
     model = Note
 
+class TaskDetailView(generic.DetailView):
+    model = Task
+
 class NoteListView(generic.ListView):
     model = Note
     #context_object_name = 'my_book_list'   # ваше собственное имя переменной контекста в шаблоне
@@ -45,85 +47,75 @@ class NoteListView(generic.ListView):
 
 
 class TransmittedNotesByUserListView(LoginRequiredMixin,generic.ListView):
-    # Общее представление на основе классов, в котором перечислены книги, предоставленные текущему пользователю
-    model = NoteInstance
-    template_name ='notes/noteinstance_list_borrowed_user.html'
+    model = Task
+    template_name ='notes/task_list_borrowed_user.html'
     paginate_by = 2
 
     def get_queryset(self):
-        return NoteInstance.objects.filter(responsible=self.request.user).filter(status__exact='В работе').order_by('must_do')
+        return Task.objects.filter(responsible=self.request.user).filter(status__exact='В работе').order_by('must_do')
 
 
 def index(request):
-    num_notes = Note.objects.all().count()
-    num_instances = NoteInstance.objects.all().count()
-    # Заявки со статусом "Открыто"
-    num_instances_open = NoteInstance.objects.filter(status__exact='Открыто').count()
-
-
+    # num_notes = Note.objects.all().count()
+    # num_tasks = Task.objects.all().count()
+    # num_tasks_open = Task.objects.filter(status__exact='Открыто').count()
     return render(
         request,
         'notes/index.html',
         context = {
-            'num_notes': num_notes,
-            'num_instances': num_instances,
-            'num_instances_open': num_instances_open,
+            # 'num_notes': num_notes,
+            # 'num_tasks': num_tasks,
+            # 'num_tasks_open': num_tasks_open,
             'title': 'Главная страница',
             }
     )
 
 
 class NoteListViewEditor(PermissionRequiredMixin, generic.ListView):
-    model = NoteInstance
+    model = Task
     permission_required = 'notes.can_mark_returned'
-    template_name = 'notes/note_editor.html'
+    template_name = 'notes/all_tasks.html'
     paginate_by = 10
     def get_queryset(self):
-        return NoteInstance.objects.all()
+        return Task.objects.all()
 
 @permission_required('notes.can_mark_returned')
-def RenewNoteStuff(request, pk):
-    note_inst = get_object_or_404(NoteInstance, pk=pk)
+def RenewNoteDateTask(request, pk):
+    note_task = get_object_or_404(Task, pk=pk)
 
     # Если данный запрос типа POST, тогда
     if request.method == 'POST':
 
         # Создаём экземпляр формы и заполняем данными из запроса (связывание, binding):
-        form = RenewNoteForm(request.POST)
+        form = RenewTaskForm(request.POST)
 
         # Проверка валидности данных формы:
         if form.is_valid():
             # Обработка данных из form.cleaned_data
             #(здесь мы просто присваиваем их полю must_do)
-            note_inst.must_do = form.cleaned_data['must_do']
-            note_inst.save()
+            note_task.must_do = form.cleaned_data['must_do']
+            note_task.save()
 
-            return HttpResponseRedirect(reverse('note-editor') )
+            return HttpResponseRedirect(reverse('all-tasks') )
 
     # Если это GET (или какой-либо ещё), создать форму по умолчанию.
     else:
         proposed_must_do = datetime.date.today() + datetime.timedelta(weeks=3)
-        form = RenewNoteForm(initial={'must_do': proposed_must_do,})
+        form = RenewTaskForm(initial={'must_do': proposed_must_do,})
 
     return render(
         request, 
-        'notes/renew_note_stuff.html', 
+        'notes/renew_note_date_task.html', 
         context = {
             'form': form,
-            'noteinst':note_inst
+            'notetask':note_task
             }
         )
-
-
-
-    """
-    Работа с формами
-    """
 
 class NoteCreate(LoginRequiredMixin, CreateView):
     model = Note
     #fields = '__all__'
-    fields = ['title', 'date', 'textarea']
+    fields = ['title', 'textarea']
     success_url = reverse_lazy('notes')
     raise_exception = True
     # def form_valid(self, form):
@@ -140,7 +132,7 @@ class NoteCreate(LoginRequiredMixin, CreateView):
 
 class NoteUpdate(LoginRequiredMixin, UpdateView):
     model = Note
-    fields = ['title', 'date', 'textarea']
+    fields = ['title', 'textarea']
     success_url = reverse_lazy('notes')
 
 class NoteDelete(PermissionRequiredMixin, DeleteView):
