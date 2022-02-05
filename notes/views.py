@@ -39,11 +39,7 @@ class TaskDetailView(generic.DetailView):
 
 class NoteListView(generic.ListView):
     model = Note
-    #context_object_name = 'my_book_list'   # ваше собственное имя переменной контекста в шаблоне
-    #queryset = Book.objects.filter(title__icontains='war')[:5] # Получение 5 книг, содержащих слово 'war' в заголовке
-    template_name = 'notes/note_list.html'  # Определение имени вашего шаблона и его расположения
-    #def get_queryset(self):
-        #return Book.objects.filter(title__icontains='Хоббит')[:5] # Получить 5 книг, содержащих 'war' в заголовке
+    template_name = 'notes/note_list.html'
     paginate_by = 10
 
 
@@ -58,16 +54,10 @@ class MyTaskView(LoginRequiredMixin,generic.ListView):
 
 
 def index(request):
-    # num_notes = Note.objects.all().count()
-    # num_tasks = Task.objects.all().count()
-    # num_tasks_open = Task.objects.filter(status__exact='Открыто').count()
     return render(
         request,
         'notes/index.html',
         context = {
-            # 'num_notes': num_notes,
-            # 'num_tasks': num_tasks,
-            # 'num_tasks_open': num_tasks_open,
             'title': 'Главная страница',
             }
     )
