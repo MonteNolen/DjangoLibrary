@@ -2,22 +2,33 @@
 
 {% block content %}
     <h1>Все задачи</h1>
-  
-    {% if task_list %}
-    <ul>
+    <table>
+      <thead>
+      <tr>
+          <td>Title</td>
+          <td>Created</td>
+          <td>Author</td>
+          <td>Status</td>
+      </tr>
+      </thead>
+      <tbody>
+      {% if task_list %}
       {% for t in task_list %}
-      <li class="{% if t.is_overdue %}text-danger{% endif %}">
-        <a href="{{ t.get_absolute_url }}">{{ t.title }}</a> ({{ t.must_do }}) {{ t.responsible }} 
-        {% if perms.notes.can_mark_returned %}
-        <a href="{% url 'renew-note-date-task' t.id %}">Обновление</a>
-        {% endif %}
-        
-      </li>
+      <tr>
+        <td><a href="{% url 'task-detail' t.pk %}">{{ t.title }}</a></td>
+        <td>{{ t.created|date }}</td>
+        <td>{{ t.user }}</td>
+        <td>{{ t.closed|yesno:"Закрыт, Открыт" }}</td>
+      </tr>
+      {% empty %}
+      <tr>
+          <td colspan=4>Нет задач.</td>
+      </tr>
       {% endfor %}
-    </ul>
+      </tbody>
+      {% endif %}
+  </table>
 
-    {% else %}
-      <p>Нет задач</p>
-    {% endif %}
+    
  
 {% endblock %}

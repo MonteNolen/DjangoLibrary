@@ -44,30 +44,29 @@ class Task(models.Model):
     """
     Модель представляющая задачу
     """
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4, help_text="Уникальный ID для этой задачи")
+    #id = models.UUIDField(primary_key=True, default=uuid.uuid4, help_text="Уникальный ID для этой задачи")
     user = models.ForeignKey('Author', on_delete=models.SET_NULL, blank=True, null=True, verbose_name='Пользователь')
     title = models.CharField("Заголовок", max_length=100)
-    must_do = models.DateField("Выполнить до", null=True, blank=True)
+    created = models.DateField("Создана", auto_now=True)
+    closed = models.DateField("Закрыта", null=True, blank=True)
     textarea = models.TextField("Текст задачи", max_length=1000)
     responsible = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
 
     STATUS_CHOICES =(
-        ('В работе', 'В работе'),
-        ('Выполнил', 'Выполнил'),
-        ('Отложено', 'Отложено'),
-        ('Открыто', 'Открыто'),
+        ('Закрыт', 'Закрыт'),
+        ('Открыт', 'Открыт'),
 )
     
     status = models.CharField(max_length=10, choices=STATUS_CHOICES, blank=True, default='Открыто', help_text='Статус задачи', verbose_name='Статус')
 
     @property
     def is_overdue(self):
-        if self.must_do and date.today() > self.must_do:
+        if self.created and date.today() > self.created:
             return True
         return False
 
     class Meta:
-        ordering = ["must_do"]
+        ordering = ["created"]
         verbose_name = 'Задача'
         verbose_name_plural = 'Задачи'
         permissions = (("can_mark_returned", "Что-то должно тут быть"),)

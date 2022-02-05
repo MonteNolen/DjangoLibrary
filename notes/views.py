@@ -4,11 +4,12 @@ from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.contrib.auth.decorators import permission_required
 from django.contrib.auth.models import User
+from django.contrib.auth.forms import UserCreationForm
 from django.http import HttpResponseRedirect
 from django.urls import reverse, reverse_lazy
 import datetime
 
-from .forms import RenewTaskForm
+# from .forms import RenewTaskForm
 from .models import Note, Task, Author
 
 
@@ -46,13 +47,14 @@ class NoteListView(generic.ListView):
     paginate_by = 10
 
 
-class TransmittedNotesByUserListView(LoginRequiredMixin,generic.ListView):
+class MyTaskView(LoginRequiredMixin,generic.ListView):
     model = Task
-    template_name ='notes/task_list_borrowed_user.html'
+    template_name ='notes/my_task.html'
     paginate_by = 2
 
     def get_queryset(self):
-        return Task.objects.filter(responsible=self.request.user).filter(status__exact='В работе').order_by('must_do')
+        # return Task.objects.filter(responsible=self.request.user).filter(status__exact='Открыт').order_by('created')
+        return Task.objects.filter(user=Author.objects.get(user=self.request.user)).order_by('created')
 
 
 def index(request):
@@ -71,7 +73,7 @@ def index(request):
     )
 
 
-class NoteListViewEditor(PermissionRequiredMixin, generic.ListView):
+class TaskListView(PermissionRequiredMixin, generic.ListView):
     model = Task
     permission_required = 'notes.can_mark_returned'
     template_name = 'notes/all_tasks.html'
@@ -79,38 +81,38 @@ class NoteListViewEditor(PermissionRequiredMixin, generic.ListView):
     def get_queryset(self):
         return Task.objects.all()
 
-@permission_required('notes.can_mark_returned')
-def RenewNoteDateTask(request, pk):
-    note_task = get_object_or_404(Task, pk=pk)
+# @permission_required('notes.can_mark_returned')
+# def RenewNoteDateTask(request, pk):
+#     note_task = get_object_or_404(Task, pk=pk)
 
-    # Если данный запрос типа POST, тогда
-    if request.method == 'POST':
+#     # Если данный запрос типа POST, тогда
+#     if request.method == 'POST':
 
-        # Создаём экземпляр формы и заполняем данными из запроса (связывание, binding):
-        form = RenewTaskForm(request.POST)
+#         # Создаём экземпляр формы и заполняем данными из запроса (связывание, binding):
+#         form = RenewTaskForm(request.POST)
 
-        # Проверка валидности данных формы:
-        if form.is_valid():
-            # Обработка данных из form.cleaned_data
-            #(здесь мы просто присваиваем их полю must_do)
-            note_task.must_do = form.cleaned_data['must_do']
-            note_task.save()
+#         # Проверка валидности данных формы:
+#         if form.is_valid():
+#             # Обработка данных из form.cleaned_data
+#             #(здесь мы просто присваиваем их полю closed)
+#             note_task.closed = form.cleaned_data['closed']
+#             note_task.save()
 
-            return HttpResponseRedirect(reverse('all-tasks') )
+#             return HttpResponseRedirect(reverse('all-tasks') )
 
-    # Если это GET (или какой-либо ещё), создать форму по умолчанию.
-    else:
-        proposed_must_do = datetime.date.today() + datetime.timedelta(weeks=3)
-        form = RenewTaskForm(initial={'must_do': proposed_must_do,})
+#     # Если это GET (или какой-либо ещё), создать форму по умолчанию.
+#     else:
+#         proposed_closed = datetime.date.today() + datetime.timedelta(weeks=3)
+#         form = RenewTaskForm(initial={'closed': proposed_closed,})
 
-    return render(
-        request, 
-        'notes/renew_note_date_task.html', 
-        context = {
-            'form': form,
-            'notetask':note_task
-            }
-        )
+#     return render(
+#         request, 
+#         'notes/renew_note_date_task.html', 
+#         context = {
+#             'form': form,
+#             'notetask':note_task
+#             }
+#         )
 
 class NoteCreate(LoginRequiredMixin, CreateView):
     model = Note
@@ -139,3 +141,20 @@ class NoteDelete(PermissionRequiredMixin, DeleteView):
     model = Note
     permission_required = 'notes.can_mark_returned'
     success_url = reverse_lazy('notes')
+
+class RegisterView(CreateView):
+    form_class = UserCreationForm
+    template_name = 'registration/register.html'
+    success_url = reverse_lazy('index')
+
+class TaskCreateView(CreateView):
+    model = Task
+    template_name = 'notes/add_task.html'
+    fields = ['title', 'textarea']
+    success_url = reverse_lazy('index')
+
+    def form_valid(self, form):
+        fields = form.save(commit=False)
+        fields.user = Author.objects.get(user=self.request.user)
+        fields.save()
+        return super().form_valid(form)

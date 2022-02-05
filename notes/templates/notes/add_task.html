@@ -1,0 +1,13 @@
+{% extends "notes/layout.html" %}
+{% block content %}
+{% if user.is_authenticated %}
+    <a href="{% url 'index' %}">Вернуться на гланвую</a>
+    <form action="{% url 'add-task' %}" method="post">
+      {% csrf_token %}
+      {{ form.as_p }}
+      <input type="submit" value="Submit" />
+    </form>
+{% else %}
+    <p>Ты должен быть авторизован</p>
+{% endif %}
+{% endblock %}

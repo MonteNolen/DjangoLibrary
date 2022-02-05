@@ -31,13 +31,13 @@ class NoteAdmin(admin.ModelAdmin):
 @admin.register(Task)
 class TaskAdmin(admin.ModelAdmin):
     list_filter= ('status', 'responsible')
-    list_display = ('user', 'title', 'must_do', 'status', 'responsible')
+    list_display = ('user', 'title', 'created', 'status', 'responsible')
     search_fields = ['title', 'textarea']
     fieldsets = (
         # (None, { 
         #     'fields': ('note', 'id')
         # }),
         ('Availability', {
-            'fields': ('user', 'title', 'status', 'must_do', 'responsible', 'textarea')
+            'fields': ('user', 'title', 'status', 'closed', 'responsible', 'textarea')
         }),
     )

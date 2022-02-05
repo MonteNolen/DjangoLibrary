@@ -7,7 +7,7 @@
     <ul>
       {% for t in task_list %}
       <li class="{% if t.is_overdue %}text-danger{% endif %}">
-        <a href="{{ t.get_absolute_url }}">{{ t.title }}</a> ({{ t.must_do }})
+        <a href="{{ t.get_absolute_url }}">{{ t.title }}</a> ({{ t.created }})
       </li>
       {% endfor %}
     </ul>

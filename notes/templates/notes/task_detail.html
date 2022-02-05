@@ -1,10 +1,11 @@
 {% extends 'notes/layout.html' %}
 
 {% block content %}
-<h1>Title: {{ task.title }}</h1>
+<h1>Title: {{ task.title }} - {{ task.closed|yesno:"ЗАКРЫТО, ОТКРЫТО" }}</h1>
 <p><strong>Создал: </strong> <a href="">{{ task.user }}</a></p> <!-- author detail link not yet defined -->
-<p><strong>Дата: </strong> {{ task.date }}</p>
+<p><strong>Дата: </strong> {{ task.created }}</p>
 <p><strong>Текст: </strong> {{ task.textarea }}</p>
+{% endblock %}
   {% comment %} {% if perms.notes.can_mark_returned %}
     <li><a href="{% url 'note-update' task.id %}">Редактировать</a></li>
     <li><a href="{% url 'note-delete' task.id %}">Удалить</a></li>
@@ -22,4 +23,3 @@
     <p><strong>Текст: </strong> {{ n.textarea }}</p>
     {% endfor %}
   </div> {% endcomment %}
-{% endblock content %}
