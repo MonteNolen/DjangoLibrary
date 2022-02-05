@@ -54,7 +54,7 @@ class MyTaskView(LoginRequiredMixin,generic.ListView):
 
     def get_queryset(self):
         # return Task.objects.filter(responsible=self.request.user).filter(status__exact='Открыт').order_by('created')
-        return Task.objects.filter(user=Author.objects.get(user=self.request.user)).order_by('created')
+        return Task.objects.filter(user=Author.objects.get(user=self.request.user)).order_by('created').filter(closed=False)
 
 
 def index(request):

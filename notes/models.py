@@ -48,7 +48,7 @@ class Task(models.Model):
     user = models.ForeignKey('Author', on_delete=models.SET_NULL, blank=True, null=True, verbose_name='Пользователь')
     title = models.CharField("Заголовок", max_length=100)
     created = models.DateField("Создана", auto_now=True)
-    closed = models.DateField("Закрыта", null=True, blank=True)
+    closed = models.BooleanField(default=False)
     textarea = models.TextField("Текст задачи", max_length=1000)
     responsible = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
 
